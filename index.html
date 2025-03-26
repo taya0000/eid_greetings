@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta property="og:title" content="تهنئة العيد 🎉">
   <meta property="og:description" content="أرسل أجمل تهنئة لأصدقائك الآن!">
-  <meta property="og:image" content="https://i.imgur.com/Bp3kRLf.jpg"> 
+  <meta property="og:image" content="https://i.imgur.com/Bp3kRLf.jpg">
   <meta property="og:url" content="https://taya0000.github.io/eid_greetings/">
   <title>تهنئة العيد 🎉</title>
   <style>
@@ -70,20 +70,21 @@
 
   <footer>
     <a href="privacy.html" class="share-btn">سياسة الخصوصية</a>
+    <a href="tel:+966500000000" class="share-btn">اتصل بنا</a>
     <p>حقوق الطبع والنشر © 2025 أخوكم طائع العكبري</p>
   </footer>
 
   <script>
     async function generateLink() {
-      const name = encodeURIComponent(document.getElementById('name').value);
-      const msg = encodeURIComponent(document.getElementById('msg').value);
+      const name = encodeURIComponent(document.getElementById('name').value.trim());
+      const msg = encodeURIComponent(document.getElementById('msg').value.trim());
       if (name && msg) {
         const fullUrl = `https://taya0000.github.io/eid_greetings/?name=${name}&msg=${msg}`;
         
         // استدعاء API لاختصار الرابط
         const shortUrl = await shortenLink(fullUrl);
         document.getElementById('resultLink').href = shortUrl;
-        document.getElementById('whatsappShare').href = `https://wa.me/?text=🎉 تهنئتي لكم ${shortUrl}`;
+        document.getElementById('whatsappShare').href = `https://wa.me/?text=🎉 تهنئتي لكم: ${shortUrl}`;
         document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${shortUrl}`;
         document.getElementById('linkArea').style.display = 'block';
       } else {
@@ -98,18 +99,18 @@
         return shortUrl;
       } catch (error) {
         console.error("فشل الاختصار:", error);
-        return url; // لو فشل نرجع الرابط الأصلي
+        return url; // fallback للرابط الأصلي
       }
     }
 
-    // عرض التهنئة مباشرة من الرابط
+    // عرض التهنئة مباشرة من الرابط مع اسم المدعو
     window.onload = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const name = urlParams.get('name');
       const msg = urlParams.get('msg');
       if (name && msg) {
         document.getElementById('showGreeting').innerHTML = `
-          <h2>🎉 تهنئة من ${decodeURIComponent(name)} 🎉</h2>
+          <h2>🎉 تهنئة خاصة لك يا ${decodeURIComponent(name)} 🎉</h2>
           <p>${decodeURIComponent(msg)}</p>
           <button onclick="window.location.href='https://taya0000.github.io/eid_greetings/'">ارسل تهنئتك الآن</button>
         `;

@@ -56,7 +56,7 @@
 
   <div class="container">
     <h1>🎉 أرسل تهنئة العيد 🎉</h1>
-    <input type="text" id="senderName" placeholder="أدخل اسمك (صاحب الدعوة)" required>
+    <input type="text" id="receiverName" placeholder="اسم المدعو" required>
     <textarea id="greetingMessage" placeholder="اكتب رسالة التهنئة هنا" rows="4" required></textarea>
     <button onclick="generateLink()">🔗 إنشاء رابط تهنئة</button>
 
@@ -67,18 +67,19 @@
   </div>
 
   <footer>
-    حقوق الطبع والنشر © 2025 أخوكم طائع العكبري
+    <a href="https://example.com/privacy-policy" target="_blank">🛡 سياسة الخصوصية</a>  
+    <p>حقوق الطبع والنشر © 2025 أخوكم طائع العكبري</p>
   </footer>
 
   <script>
     let shortUrl = "";
 
     function generateLink() {
-      const senderName = document.getElementById("senderName").value || "صديقك العزيز";
+      const receiverName = document.getElementById("receiverName").value || "صديقي العزيز";
       const greetingMessage = document.getElementById("greetingMessage").value || "كل عام وأنت بخير وسعادة!";
 
       const baseUrl = "https://taya0000.github.io/eid_greetings/";
-      const fullUrl = `${baseUrl}?sender=${encodeURIComponent(senderName)}&message=${encodeURIComponent(greetingMessage)}`;
+      const fullUrl = `${baseUrl}?name=${encodeURIComponent(receiverName)}&message=${encodeURIComponent(greetingMessage)}`;
 
       shortenUrl(fullUrl);
     }
@@ -103,7 +104,7 @@
 
     function shareWhatsapp() {
       if (shortUrl) {
-        window.open(`https://wa.me/?text=${encodeURIComponent("🎉 أرسل لك تهنئة خاصة! 🎉 " + shortUrl)}`, '_blank');
+        window.open(`https://wa.me/?text=${encodeURIComponent("🎉 تهنئة خاصة لك! 🎉 " + shortUrl)}`, '_blank');
       }
     }
 
@@ -111,6 +112,27 @@
       if (shortUrl) {
         window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`, '_blank');
       }
+    }
+
+    function displayGreeting() {
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name") || "ضيفنا العزيز";
+      const message = params.get("message") || "كل عام وأنت بخير! 🎉";
+
+      document.body.innerHTML = `
+        <div class="container">
+          <h1>🎊 تهنئة خاصة لـ ${name} 🎊</h1>
+          <p style="font-size: 20px;">${message}</p>
+        </div>
+        <footer>
+          <a href="https://example.com/privacy-policy" target="_blank">🛡 سياسة الخصوصية</a>  
+          <p>حقوق الطبع والنشر © 2025 أخوكم طائع العكبري</p>
+        </footer>
+      `;
+    }
+
+    if (window.location.search) {
+      displayGreeting();
     }
   </script>
 

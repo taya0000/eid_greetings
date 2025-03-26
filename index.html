@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,7 @@
       100% {background-position: 0% 50%;}
     }
 
-    input, button, textarea {
+    input, textarea, button {
       padding: 15px;
       width: 80%;
       max-width: 400px;
@@ -65,21 +66,6 @@
       background-color: #25D366;
     }
 
-    footer {
-      margin-top: 50px;
-      padding: 20px;
-      background-color: #333;
-      color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    footer a {
-      color: #00c8ff;
-      text-decoration: none;
-      font-size: 16px;
-    }
-
     .site-btn {
       background-color: #00c8ff;
       color: #fff;
@@ -94,38 +80,69 @@
     .site-btn:hover {
       background-color: #0099cc;
     }
+
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #333;
+      color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    footer a {
+      color: #00c8ff;
+      text-decoration: none;
+      font-size: 16px;
+    }
   </style>
 </head>
+
 <body>
 
   <h1>✨ أكتب اسمك وابعث تهنئة العيد لأصدقائك ✨</h1>
+
   <input type="text" id="username" placeholder="اكتب اسمك هنا">
   <textarea id="userGreeting" placeholder="اكتب تهنئتك الخاصة هنا..."></textarea>
-  <button onclick="generateGreeting()">أنشئ التهنئة</button>
+  <button onclick="generateLink()">أنشئ رابط تهنئتك</button>
 
   <div id="result" style="display:none;"></div>
 
   <script>
-    function generateGreeting() {
+    // قراءة التهنئة لو الرابط فيه بيانات
+    window.onload = function () {
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get('name');
+      const msg = params.get('msg');
+      if (name && msg) {
+        document.getElementById('result').innerHTML = `
+          <h2>🎉 تهنئة من ${name} 🎉</h2>
+          <p>${msg}</p>
+        `;
+        document.getElementById('result').style.display = "block";
+      }
+    }
+
+    // توليد رابط المشاركة
+    function generateLink() {
       const name = document.getElementById('username').value.trim();
-      const customMessage = document.getElementById('userGreeting').value.trim();
-      if(name === "") {
-        alert("من فضلك اكتب اسمك أولاً");
+      const message = document.getElementById('userGreeting').value.trim();
+      if (name === "" || message === "") {
+        alert("من فضلك اكتب اسمك وتهنئتك");
         return;
       }
 
-      const fullMessage = `${name} يهديكم هذه التهنئة:\n${customMessage !== "" ? customMessage : "أبارك لكم العيد وأتمنى لكم عيداً سعيداً مليئاً بالفرح والسرور!"}\nصمّم تهنئتك الخاصة من هنا: https://taya0000.github.io/eid_greetings`;
+      const baseUrl = 'https://taya0000.github.io/eid_greetings';
+      const finalLink = `${baseUrl}?name=${encodeURIComponent(name)}&msg=${encodeURIComponent(message)}`;
 
-      let greetingMessage = `
-        <h2>🎉 تهنئة من ${name} 🎉</h2>
-        <p>${customMessage !== "" ? customMessage : "أبارك لكم العيد وأتمنى لكم عيداً سعيداً مليئاً بالفرح والسرور!"}</p>
-        <a class="site-btn" href="https://taya0000.github.io/eid_greetings" target="_blank">✨ صمّم تهنئتك الخاصة الآن ✨</a>
-        <br><br>
-        <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://taya0000.github.io/eid_greetings&quote=${encodeURIComponent(fullMessage)}" target="_blank">مشاركة على فيسبوك</a>
-        <a class="share-btn whatsapp-btn" href="https://wa.me/?text=${encodeURIComponent(fullMessage)}" target="_blank">مشاركة على واتساب</a>
+      let output = `
+        <h2>✅ تم إنشاء رابط تهنئتك ✅</h2>
+        <a class="site-btn" href="${finalLink}" target="_blank">📨 افتح رابط تهنئتك 📩</a><br><br>
+        <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${finalLink}" target="_blank">مشاركة على فيسبوك</a>
+        <a class="share-btn whatsapp-btn" href="https://wa.me/?text=${encodeURIComponent('🎉 تهنئتي لكم: ' + finalLink)}" target="_blank">مشاركة على واتساب</a>
       `;
 
-      document.getElementById('result').innerHTML = greetingMessage;
+      document.getElementById('result').innerHTML = output;
       document.getElementById('result').style.display = "block";
     }
   </script>

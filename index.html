@@ -41,6 +41,13 @@
     }
     .whatsapp-btn { background-color: #25D366; }
     .facebook-btn { background-color: #1877F2; }
+    .short-link {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #007bff;
+      word-wrap: break-word;
+    }
     button:hover { opacity: 0.9; }
     footer { margin-top: 30px; font-size: 14px; color: #555; }
   </style>
@@ -51,9 +58,12 @@
     <h1>🎉 أرسل تهنئة العيد 🎉</h1>
     <input type="text" id="senderName" placeholder="أدخل اسمك (صاحب الدعوة)" required>
     <textarea id="greetingMessage" placeholder="اكتب رسالة التهنئة هنا" rows="4" required></textarea>
+    <button onclick="generateLink()">🔗 إنشاء رابط تهنئة</button>
 
-    <button class="whatsapp-btn" onclick="shareWhatsapp()">📱 مشاركة عبر واتساب</button>
-    <button class="facebook-btn" onclick="shareFacebook()">📘 مشاركة عبر فيسبوك</button>
+    <div id="shortenedLink" class="short-link"></div>
+
+    <button class="whatsapp-btn" id="whatsappBtn" style="display:none;" onclick="shareWhatsapp()">📱 مشاركة عبر واتساب</button>
+    <button class="facebook-btn" id="facebookBtn" style="display:none;" onclick="shareFacebook()">📘 مشاركة عبر فيسبوك</button>
   </div>
 
   <footer>
@@ -61,20 +71,46 @@
   </footer>
 
   <script>
-    function shareWhatsapp() {
+    let shortUrl = "";
+
+    function generateLink() {
       const senderName = document.getElementById("senderName").value || "صديقك العزيز";
-      const greetingMessage = document.getElementById("greetingMessage").value || "كل عام وأنت بخير وسعادة! أتمنى لك عيدًا مليئًا بالفرح والسرور!";
-      
-      const text = `🎉 تهنئة خاصة من ${senderName}! 🎉\n📜 ${greetingMessage}\n🎊 اصنع تهنئتك الخاصة من هنا: https://taya0000.github.io/eid_greetings/`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+      const greetingMessage = document.getElementById("greetingMessage").value || "كل عام وأنت بخير وسعادة!";
+
+      const baseUrl = "https://taya0000.github.io/eid_greetings/";
+      const fullUrl = `${baseUrl}?sender=${encodeURIComponent(senderName)}&message=${encodeURIComponent(greetingMessage)}`;
+
+      shortenUrl(fullUrl);
+    }
+
+    function shortenUrl(url) {
+      fetch("https://api.shrtco.de/v2/shorten?url=" + encodeURIComponent(url))
+        .then(response => response.json())
+        .then(data => {
+          if (data.ok) {
+            shortUrl = data.result.full_short_link;
+            document.getElementById("shortenedLink").innerHTML = `📎 <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
+            document.getElementById("whatsappBtn").style.display = "block";
+            document.getElementById("facebookBtn").style.display = "block";
+          } else {
+            document.getElementById("shortenedLink").innerHTML = "⚠ حدث خطأ أثناء اختصار الرابط!";
+          }
+        })
+        .catch(() => {
+          document.getElementById("shortenedLink").innerHTML = "⚠ لا يمكن الوصول إلى خدمة الاختصار!";
+        });
+    }
+
+    function shareWhatsapp() {
+      if (shortUrl) {
+        window.open(`https://wa.me/?text=${encodeURIComponent("🎉 أرسل لك تهنئة خاصة! 🎉 " + shortUrl)}`, '_blank');
+      }
     }
 
     function shareFacebook() {
-      const senderName = document.getElementById("senderName").value || "صديقك العزيز";
-      const greetingMessage = document.getElementById("greetingMessage").value || "كل عام وأنت بخير وسعادة! أتمنى لك عيدًا مليئًا بالفرح والسرور!";
-      
-      const text = `🎉 تهنئة خاصة من ${senderName}! 🎉\n📜 ${greetingMessage}\n🎊 اصنع تهنئتك الخاصة من هنا: https://taya0000.github.io/eid_greetings/`;
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("https://taya0000.github.io/eid_greetings/")}&quote=${encodeURIComponent(text)}`, '_blank');
+      if (shortUrl) {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`, '_blank');
+      }
     }
   </script>
 

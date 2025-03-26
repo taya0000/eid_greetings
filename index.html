@@ -1,16 +1,140 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>موقع تهنئة العيد</title>
-  <!-- كود ربط AdSense (ستضيفه لاحقًا بعد الحصول عليه) -->
+  <title>تهنئة العيد</title>
+  <style>
+    body {
+      background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #ffdde1);
+      background-size: 400% 400%;
+      animation: gradient 10s ease infinite;
+      font-family: 'Cairo', sans-serif;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+    }
+
+    @keyframes gradient {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    input, button, textarea {
+      padding: 15px;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 10px;
+      border: none;
+      margin: 10px auto;
+      display: block;
+      font-size: 18px;
+    }
+
+    button {
+      background-color: #ff6f61;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #e85a4f;
+    }
+
+    #result {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .share-btn {
+      background-color: #4267B2;
+      color: #fff;
+      margin-top: 15px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .whatsapp-btn {
+      background-color: #25D366;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #333;
+      color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    footer a {
+      color: #00c8ff;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .site-btn {
+      background-color: #00c8ff;
+      color: #fff;
+      padding: 12px 25px;
+      border-radius: 8px;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+
+    .site-btn:hover {
+      background-color: #0099cc;
+    }
+  </style>
 </head>
-<body style="font-family: 'Cairo', sans-serif; text-align: center; padding: 50px; background-color: #f8f8f8; color: #333;">
-  <h1 style="color: #28a745;">🎉 تهانينا بمناسبة عيد الفطر المبارك 🎉</h1>
-  <p>موقع التهاني قيد الإنشاء... استعدوا لمشاركة أجمل التهاني والبطاقات 🎈</p>
-  <h3>🚀 تابعونا، الموقع سيطلق قريبًا</h3>
-  <a href="privacy.html" style="color: #007bff; text-decoration: none;">سياسة الخصوصية</a>
+<body>
+
+  <h1>✨ أكتب اسمك وابعث تهنئة العيد لأصدقائك ✨</h1>
+  <input type="text" id="username" placeholder="اكتب اسمك هنا">
+  <textarea id="userGreeting" placeholder="اكتب تهنئتك الخاصة هنا..."></textarea>
+  <button onclick="generateGreeting()">أنشئ التهنئة</button>
+
+  <div id="result" style="display:none;"></div>
+
+  <script>
+    function generateGreeting() {
+      const name = document.getElementById('username').value.trim();
+      const customMessage = document.getElementById('userGreeting').value.trim();
+      if(name === "") {
+        alert("من فضلك اكتب اسمك أولاً");
+        return;
+      }
+
+      const fullMessage = `${name} يهديكم هذه التهنئة:\n${customMessage !== "" ? customMessage : "أبارك لكم العيد وأتمنى لكم عيداً سعيداً مليئاً بالفرح والسرور!"}\nصمّم تهنئتك الخاصة من هنا: https://taya0000.github.io/eid_greetings`;
+
+      let greetingMessage = `
+        <h2>🎉 تهنئة من ${name} 🎉</h2>
+        <p>${customMessage !== "" ? customMessage : "أبارك لكم العيد وأتمنى لكم عيداً سعيداً مليئاً بالفرح والسرور!"}</p>
+        <a class="site-btn" href="https://taya0000.github.io/eid_greetings" target="_blank">✨ صمّم تهنئتك الخاصة الآن ✨</a>
+        <br><br>
+        <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://taya0000.github.io/eid_greetings&quote=${encodeURIComponent(fullMessage)}" target="_blank">مشاركة على فيسبوك</a>
+        <a class="share-btn whatsapp-btn" href="https://wa.me/?text=${encodeURIComponent(fullMessage)}" target="_blank">مشاركة على واتساب</a>
+      `;
+
+      document.getElementById('result').innerHTML = greetingMessage;
+      document.getElementById('result').style.display = "block";
+    }
+  </script>
+
+  <footer>
+    <p>&copy; 2025 جميع الحقوق محفوظة | أخوكم <strong>طائع العكبري</strong></p>
+    <p>💻 تصميم وبرمجة بحب واحتراف 🖤</p>
+    <a href="privacy.html">سياسة الخصوصية</a>
+  </footer>
+
 </body>
 </html>
-

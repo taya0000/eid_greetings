@@ -1,157 +1,120 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تهنئة العيد</title>
+  <meta property="og:title" content="تهنئة العيد 🎉">
+  <meta property="og:description" content="أرسل أجمل تهنئة لأصدقائك الآن!">
+  <meta property="og:image" content="https://i.imgur.com/Bp3kRLf.jpg"> 
+  <meta property="og:url" content="https://taya0000.github.io/eid_greetings/">
+  <title>تهنئة العيد 🎉</title>
   <style>
     body {
-      background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #ffdde1);
+      background: linear-gradient(-45deg, #ffcc70, #c850c0, #4158d0, #ff6f61);
       background-size: 400% 400%;
-      animation: gradient 10s ease infinite;
+      animation: gradientBG 15s ease infinite;
+      color: #fff;
       font-family: 'Cairo', sans-serif;
-      color: #333;
       text-align: center;
-      padding: 20px;
+      padding: 30px;
     }
-
-    @keyframes gradient {
+    @keyframes gradientBG {
       0% {background-position: 0% 50%;}
       50% {background-position: 100% 50%;}
       100% {background-position: 0% 50%;}
     }
-
-    input, textarea, button {
-      padding: 15px;
-      width: 80%;
-      max-width: 400px;
-      border-radius: 10px;
-      border: none;
-      margin: 10px auto;
-      display: block;
-      font-size: 18px;
+    .container {
+      background: rgba(0,0,0,0.3);
+      border-radius: 15px;
+      padding: 20px;
     }
-
-    button {
-      background-color: #ff6f61;
-      color: white;
+    input, textarea {
+      width: 90%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
+    }
+    button, a.share-btn {
+      background-color: #ffcc70;
+      color: #333;
+      padding: 12px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin: 10px;
       cursor: pointer;
       transition: 0.3s;
     }
-
-    button:hover {
-      background-color: #e85a4f;
-    }
-
-    #result {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 20px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    .share-btn {
-      background-color: #4267B2;
-      color: #fff;
-      margin-top: 15px;
-      padding: 12px 20px;
-      border-radius: 8px;
-      display: inline-block;
-      text-decoration: none;
-    }
-
-    .whatsapp-btn {
-      background-color: #25D366;
-    }
-
-    .site-btn {
-      background-color: #00c8ff;
-      color: #fff;
-      padding: 12px 25px;
-      border-radius: 8px;
-      display: inline-block;
-      text-decoration: none;
-      margin-top: 20px;
-      transition: 0.3s;
-    }
-
-    .site-btn:hover {
-      background-color: #0099cc;
-    }
-
-    footer {
-      margin-top: 50px;
-      padding: 20px;
-      background-color: #333;
-      color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-
-    footer a {
-      color: #00c8ff;
-      text-decoration: none;
-      font-size: 16px;
-    }
+    button:hover, .share-btn:hover { background-color: #ffd580; }
+    footer { margin-top: 50px; font-size: 14px; }
   </style>
 </head>
-
 <body>
+  <div class="container">
+    <h1>🎉 أرسل تهنئتك لأصدقائك 🎉</h1>
+    <input type="text" id="name" placeholder="اكتب اسمك">
+    <textarea id="msg" placeholder="اكتب تهنئتك هنا"></textarea>
+    <button onclick="generateLink()">إنشاء رابط التهنئة</button>
 
-  <h1>✨ أكتب اسمك وابعث تهنئة العيد لأصدقائك ✨</h1>
+    <div id="linkArea" style="display:none;">
+      <p>🎉 رابط التهنئة المختصر 🎉</p>
+      <a id="resultLink" href="#" target="_blank" class="share-btn">اضغط للعرض</a><br>
+      <a id="whatsappShare" href="#" target="_blank" class="share-btn">مشاركة واتساب</a>
+      <a id="facebookShare" href="#" target="_blank" class="share-btn">مشاركة فيسبوك</a>
+    </div>
 
-  <input type="text" id="username" placeholder="اكتب اسمك هنا">
-  <textarea id="userGreeting" placeholder="اكتب تهنئتك الخاصة هنا..."></textarea>
-  <button onclick="generateLink()">أنشئ رابط تهنئتك</button>
-
-  <div id="result" style="display:none;"></div>
-
-  <script>
-    // قراءة التهنئة لو الرابط فيه بيانات
-    window.onload = function () {
-      const params = new URLSearchParams(window.location.search);
-      const name = params.get('name');
-      const msg = params.get('msg');
-      if (name && msg) {
-        document.getElementById('result').innerHTML = `
-          <h2>🎉 تهنئة من ${name} 🎉</h2>
-          <p>${msg}</p>
-        `;
-        document.getElementById('result').style.display = "block";
-      }
-    }
-
-    // توليد رابط المشاركة
-    function generateLink() {
-      const name = document.getElementById('username').value.trim();
-      const message = document.getElementById('userGreeting').value.trim();
-      if (name === "" || message === "") {
-        alert("من فضلك اكتب اسمك وتهنئتك");
-        return;
-      }
-
-      const baseUrl = 'https://taya0000.github.io/eid_greetings';
-      const finalLink = `${baseUrl}?name=${encodeURIComponent(name)}&msg=${encodeURIComponent(message)}`;
-
-      let output = `
-        <h2>✅ تم إنشاء رابط تهنئتك ✅</h2>
-        <a class="site-btn" href="${finalLink}" target="_blank">📨 افتح رابط تهنئتك 📩</a><br><br>
-        <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=${finalLink}" target="_blank">مشاركة على فيسبوك</a>
-        <a class="share-btn whatsapp-btn" href="https://wa.me/?text=${encodeURIComponent('🎉 تهنئتي لكم: ' + finalLink)}" target="_blank">مشاركة على واتساب</a>
-      `;
-
-      document.getElementById('result').innerHTML = output;
-      document.getElementById('result').style.display = "block";
-    }
-  </script>
+    <div id="showGreeting"></div>
+  </div>
 
   <footer>
-    <p>&copy; 2025 جميع الحقوق محفوظة | أخوكم <strong>طائع العكبري</strong></p>
-    <p>💻 تصميم وبرمجة بحب واحتراف 🖤</p>
-    <a href="privacy.html">سياسة الخصوصية</a>
+    <a href="privacy.html" class="share-btn">سياسة الخصوصية</a>
+    <p>حقوق الطبع والنشر © 2025 أخوكم طائع العكبري</p>
   </footer>
 
+  <script>
+    async function generateLink() {
+      const name = encodeURIComponent(document.getElementById('name').value);
+      const msg = encodeURIComponent(document.getElementById('msg').value);
+      if (name && msg) {
+        const fullUrl = `https://taya0000.github.io/eid_greetings/?name=${name}&msg=${msg}`;
+        
+        // استدعاء API لاختصار الرابط
+        const shortUrl = await shortenLink(fullUrl);
+        document.getElementById('resultLink').href = shortUrl;
+        document.getElementById('whatsappShare').href = `https://wa.me/?text=🎉 تهنئتي لكم ${shortUrl}`;
+        document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${shortUrl}`;
+        document.getElementById('linkArea').style.display = 'block';
+      } else {
+        alert('رجاءً اكتب اسمك وتهنئتك');
+      }
+    }
+
+    async function shortenLink(url) {
+      try {
+        const response = await fetch(`https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`);
+        const shortUrl = await response.text();
+        return shortUrl;
+      } catch (error) {
+        console.error("فشل الاختصار:", error);
+        return url; // لو فشل نرجع الرابط الأصلي
+      }
+    }
+
+    // عرض التهنئة مباشرة من الرابط
+    window.onload = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name');
+      const msg = urlParams.get('msg');
+      if (name && msg) {
+        document.getElementById('showGreeting').innerHTML = `
+          <h2>🎉 تهنئة من ${decodeURIComponent(name)} 🎉</h2>
+          <p>${decodeURIComponent(msg)}</p>
+          <button onclick="window.location.href='https://taya0000.github.io/eid_greetings/'">ارسل تهنئتك الآن</button>
+        `;
+      }
+    }
+  </script>
 </body>
 </html>

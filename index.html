@@ -3,138 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎉 تهنئة العيد 🎉</title>
+  <meta property="og:title" content="تهنئة العيد 🎉">
+  <meta property="og:description" content="أرسل أجمل تهنئة لأصدقائك الآن!">
+  <meta property="og:image" content="https://i.imgur.com/Bp3kRLf.jpg"> <!-- غيّر الصورة -->
+  <meta property="og:url" content="https://taya0000.github.io/eid_greetings/">
+  <title>تهنئة العيد 🎉</title>
   <style>
     body {
+      background: linear-gradient(-45deg, #ffcc70, #c850c0, #4158d0, #ff6f61);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #fff;
       font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #FFD3A5, #FD6585);
-      color: #333;
       text-align: center;
-      padding: 20px;
+      padding: 30px;
+    }
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
     }
     .container {
-      background: #fff;
-      padding: 20px;
+      background: rgba(0,0,0,0.3);
       border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      max-width: 600px;
-      margin: auto;
+      padding: 20px;
     }
     input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 10px;
       width: 90%;
-      display: block;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin: 10px 0;
     }
-    .whatsapp-btn { background-color: #25D366; }
-    .facebook-btn { background-color: #1877F2; }
-    .short-link {
-      margin-top: 10px;
-      font-size: 18px;
+    button, a.share-btn {
+      background-color: #ffcc70;
+      color: #333;
+      padding: 12px 20px;
+      border-radius: 10px;
+      text-decoration: none;
       font-weight: bold;
-      color: #007bff;
-      word-wrap: break-word;
+      display: inline-block;
+      margin: 10px;
+      cursor: pointer;
+      transition: 0.3s;
     }
-    button:hover { opacity: 0.9; }
-    footer { margin-top: 30px; font-size: 14px; color: #555; }
+    button:hover, .share-btn:hover { background-color: #ffd580; }
+    footer { margin-top: 50px; font-size: 14px; }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>🎉 أرسل تهنئة العيد 🎉</h1>
-    <input type="text" id="receiverName" placeholder="اسم المدعو" required>
-    <textarea id="greetingMessage" placeholder="اكتب رسالة التهنئة هنا" rows="4" required></textarea>
-    <button onclick="generateLink()">🔗 إنشاء رابط تهنئة</button>
+    <h1>🎉 أرسل تهنئتك لأصدقائك 🎉</h1>
+    <input type="text" id="name" placeholder="اكتب اسمك">
+    <textarea id="msg" placeholder="اكتب تهنئتك هنا"></textarea>
+    <button onclick="generateLink()">إنشاء رابط التهنئة</button>
 
-    <div id="shortenedLink" class="short-link"></div>
+    <div id="linkArea" style="display:none;">
+      <p>🎉 رابط التهنئة جاهز 🎉</p>
+      <a id="resultLink" href="#" target="_blank" class="share-btn">اضغط للعرض</a>
+      <br>
+      <a id="whatsappShare" href="#" target="_blank" class="share-btn">مشاركة واتساب</a>
+      <a id="facebookShare" href="#" target="_blank" class="share-btn">مشاركة فيسبوك</a>
+    </div>
 
-    <button class="whatsapp-btn" id="whatsappBtn" style="display:none;" onclick="shareWhatsapp()">📱 مشاركة عبر واتساب</button>
-    <button class="facebook-btn" id="facebookBtn" style="display:none;" onclick="shareFacebook()">📘 مشاركة عبر فيسبوك</button>
+    <div id="showGreeting"></div>
   </div>
 
   <footer>
-    <a href="https://example.com/privacy-policy" target="_blank">🛡 سياسة الخصوصية</a>  
+    <a href="privacy.html" class="share-btn">سياسة الخصوصية</a>
     <p>حقوق الطبع والنشر © 2025 أخوكم طائع العكبري</p>
   </footer>
 
   <script>
-    let shortUrl = "";
-
     function generateLink() {
-      const receiverName = document.getElementById("receiverName").value || "صديقي العزيز";
-      const greetingMessage = document.getElementById("greetingMessage").value || "كل عام وأنت بخير وسعادة!";
-
-      const baseUrl = "https://taya0000.github.io/eid_greetings/";
-      const fullUrl = `${baseUrl}?name=${encodeURIComponent(receiverName)}&message=${encodeURIComponent(greetingMessage)}`;
-
-      shortenUrl(fullUrl);
-    }
-
-    function shortenUrl(url) {
-      fetch("https://api.shrtco.de/v2/shorten?url=" + encodeURIComponent(url))
-        .then(response => response.json())
-        .then(data => {
-          if (data.ok) {
-            shortUrl = data.result.full_short_link;
-            document.getElementById("shortenedLink").innerHTML = `📎 <a href="${shortUrl}" target="_blank">${shortUrl}</a>`;
-            document.getElementById("whatsappBtn").style.display = "block";
-            document.getElementById("facebookBtn").style.display = "block";
-          } else {
-            document.getElementById("shortenedLink").innerHTML = "⚠ حدث خطأ أثناء اختصار الرابط!";
-          }
-        })
-        .catch(() => {
-          document.getElementById("shortenedLink").innerHTML = "⚠ لا يمكن الوصول إلى خدمة الاختصار!";
-        });
-    }
-
-    function shareWhatsapp() {
-      if (shortUrl) {
-        window.open(`https://wa.me/?text=${encodeURIComponent("🎉 تهنئة خاصة لك! 🎉 " + shortUrl)}`, '_blank');
+      const name = encodeURIComponent(document.getElementById('name').value);
+      const msg = encodeURIComponent(document.getElementById('msg').value);
+      if (name && msg) {
+        const shortUrl = `https://taya0000.github.io/eid_greetings/?name=${name}&msg=${msg}`;
+        document.getElementById('resultLink').href = shortUrl;
+        document.getElementById('whatsappShare').href = `https://wa.me/?text=تهنئتي لكم 🎉 ${shortUrl}`;
+        document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${shortUrl}`;
+        document.getElementById('linkArea').style.display = 'block';
+      } else {
+        alert('رجاءً اكتب اسمك وتهنئتك');
       }
     }
 
-    function shareFacebook() {
-      if (shortUrl) {
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`, '_blank');
+    // قراءة التهنئة من الرابط وعرضها
+    window.onload = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name');
+      const msg = urlParams.get('msg');
+      if (name && msg) {
+        document.getElementById('showGreeting').innerHTML = `
+          <h2>🎉 تهنئة من ${decodeURIComponent(name)} 🎉</h2>
+          <p>${decodeURIComponent(msg)}</p>
+          <button onclick="window.location.href='https://taya0000.github.io/eid_greetings/'">ارسل تهنئتك الآن</button>
+        `;
       }
-    }
-
-    function displayGreeting() {
-      const params = new URLSearchParams(window.location.search);
-      const name = params.get("name") || "ضيفنا العزيز";
-      const message = params.get("message") || "كل عام وأنت بخير! 🎉";
-
-      document.body.innerHTML = `
-        <div class="container">
-          <h1>🎊 تهنئة خاصة لـ ${name} 🎊</h1>
-          <p style="font-size: 20px;">${message}</p>
-        </div>
-        <footer>
-          <a href="https://example.com/privacy-policy" target="_blank">🛡 سياسة الخصوصية</a>  
-          <p>حقوق الطبع والنشر © 2025 أخوكم طائع العكبري</p>
-        </footer>
-      `;
-    }
-
-    if (window.location.search) {
-      displayGreeting();
     }
   </script>
-
 </body>
 </html>
